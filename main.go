@@ -65,6 +65,10 @@ func main() {
 }
 
 func GenerateDomain(domainName string) error {
+	if strings.Contains(domainName, "/") || strings.Contains(domainName, "\\") {
+		return fmt.Errorf("invalid domain name: cannot contain path separators")
+	}
+
 	domain := strings.ToLower(domainName)
 
 	templates := map[string]string{
