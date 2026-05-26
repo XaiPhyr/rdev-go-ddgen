@@ -15,7 +15,7 @@
 Install the binary globally to your computer using the Go toolchain:
 
 ```bash
-go install github.com/XaiPhyr/ddgen@latest
+go install github.com/XaiPhyr/rdev-go-ddgen@latest
 ```
 
 > *Note: Ensure your environment's `$GOPATH/bin` is added to your system's `PATH` variable to execute the command from any directory.*
@@ -29,7 +29,7 @@ go install github.com/XaiPhyr/ddgen@latest
 Bootstrap the entire core foundation layout for your new backend repository in your current working directory.
 
 ```bash
-ddgen init
+rdev-go-ddgen init
 ```
 
 ### 2. Generate a New Domain Feature Layer
@@ -37,7 +37,7 @@ ddgen init
 Scaffold a complete, isolated business domain folder containing pre-configured boilerplate layers.
 
 ```bash
-ddgen -d orders
+rdev-go-ddgen -d orders
 ```
 
 *Replace `orders` with any domain concept (e.g., `users`, `products`, `payments`).*
