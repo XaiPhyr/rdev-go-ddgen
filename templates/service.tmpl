@@ -1,0 +1,27 @@
+package {{ .Package }}
+
+import "context"
+
+type {{ .Domain }}Repository interface {
+    Create(ctx context.Context) error
+    ReadOne(ctx context.Context) error
+    ReadAll(ctx context.Context) error
+    Update(ctx context.Context) error
+    Delete(ctx context.Context) error
+}
+
+type {{ .Domain }}Service interface {
+    Create(ctx context.Context) error
+    ReadOne(ctx context.Context) error
+    ReadAll(ctx context.Context) error
+    Update(ctx context.Context) error
+    Delete(ctx context.Context) error
+}
+
+type service struct {
+    r {{ .Domain }}Repository
+}
+
+func New{{ .Domain }}Service(r {{ .Domain }}Repository) *service {
+    return &service{r: r}
+}

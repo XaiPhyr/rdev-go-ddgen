@@ -1,0 +1,29 @@
+package {{ .Package }}
+
+type handler struct {
+    svc {{ .Domain}}Service
+}
+
+func New{{ .Domain }}Handler(svc {{ .Domain}}Service) *handler {
+    return &handler{svc: svc}
+}
+
+func (h *handler) Create() {
+    // Code goes here!
+}
+
+func (h *handler) ReadOne() {
+    // Code goes here!
+}
+
+func (h *handler) ReadAll() {
+    // Code goes here!
+}
+
+func (h *handler) Update() {
+    // Code goes here!
+}
+
+func (h *handler) Delete() {
+    // Code goes here!
+}

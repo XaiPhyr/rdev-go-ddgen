@@ -1,0 +1,64 @@
+package {{ .Package }}_test
+
+import (
+    "context"
+    "testing"
+)
+
+type {{ .Domain }}Test struct {
+    CreateFunc func(ctx context.Context) error
+    ReadOneFunc func(ctx context.Context) error
+    ReadAllFunc func(ctx context.Context) error
+    UpdateFunc func(ctx context.Context) error
+    DeleteFunc func(ctx context.Context) error
+}
+
+func (t *{{ .Domain }}Test) Create (ctx context.Context) error {
+    if t.CreateFunc != nil {
+        return t.CreateFunc(ctx)
+    }
+
+    return nil
+}
+
+func (t *{{ .Domain }}Test) ReadOne (ctx context.Context) error {
+    if t.ReadOneFunc != nil {
+        return t.ReadOneFunc(ctx)
+    }
+
+    return nil
+}
+
+func (t *{{ .Domain }}Test) ReadAll (ctx context.Context) error {
+    if t.ReadAllFunc != nil {
+        return t.ReadAllFunc(ctx)
+    }
+
+    return nil
+}
+
+func (t *{{ .Domain }}Test) Update (ctx context.Context) error {
+    if t.UpdateFunc != nil {
+        return t.UpdateFunc(ctx)
+    }
+
+    return nil
+}
+
+func (t *{{ .Domain }}Test) Delete (ctx context.Context) error {
+    if t.DeleteFunc != nil {
+        return t.DeleteFunc(ctx)
+    }
+
+    return nil
+}
+
+func Test{{ .Domain }}(t *testing.T) {
+    t.Run("Initial test", func(t *testing.T){
+        // testing code goes here!
+
+        // if err != nil {
+        //     t.Errorf("Expected no error, got %v", err)
+        // }
+    })
+}
