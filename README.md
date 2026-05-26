@@ -1,5 +1,10 @@
 # RDEV DDGEN (Domain Directory Generate)
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/XaiPhyr/rdev-go-ddgen)](https://goreportcard.com/report/github.com/XaiPhyr/rdev-go-ddgen)
+[![GitHub release (latest by SemVer)](https://img.shields.io/github/v/release/XaiPhyr/rdev-go-ddgen?logo=github&color=blue)](https://github.com/XaiPhyr/rdev-go-ddgen/releases)
+[![Build Status](https://github.com/XaiPhyr/rdev-go-ddgen/actions/workflows/go.yml/badge.svg)](https://github.com/XaiPhyr/drdev-go-dgen/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 `ddgen` is a lightweight, zero-dependency Go command-line tool designed to eliminate the tedious copy-pasting required when scaffolding a Domain-Driven, Clean Architecture backend. It enforces structural consistency across your team, letting you skip the boilerplate and dive straight into writing business logic.
 
 ## Why `ddgen`?
