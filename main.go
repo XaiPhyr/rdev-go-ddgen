@@ -103,7 +103,6 @@ func GenerateFolderStructure() error {
 	foldersToGenerate := map[string]string{
 		"cmd":        "cmd",
 		"scripts":    "scripts",
-		"internal":   "internal",
 		"config":     "internal/config",
 		"migration":  "internal/db/migrations",
 		"middleware": "internal/middleware",
