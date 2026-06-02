@@ -90,12 +90,24 @@ func GenerateDomain(domainName string) error {
 		return fmt.Errorf("Cannot proceed creating domain folder %v", err)
 	}
 
+	if err := os.MkdirAll("internal/shared/models", 0755); err != nil {
+		return fmt.Errorf("Cannot proceed creating domain folder %v", err)
+	}
+
 	cap := strings.ToUpper(domain[0:1])
 	capitalizedDomain := fmt.Sprintf("%s%s", cap, domain[1:])
 	data := GeneratorData{Package: domain, Domain: capitalizedDomain}
 
 	for tmpPath, outputName := range templates {
 		GenerateAndParse(domain, "internal", outputName, tmpPath, &data)
+	}
+
+	_, err = os.Stat(fmt.Sprintf("internal/shared/models/%s.go", domain))
+	if err != nil {
+		err = GenerateAndParse("", "internal/shared/models", fmt.Sprintf("%s.go", domain), "templates/models.tmpl", &data)
+		if err != nil {
+			fmt.Println(fmt.Errorf("Models file not created %v", err))
+		}
 	}
 
 	return nil
@@ -142,7 +154,7 @@ func GenerateFolderStructure() error {
 	if err != nil {
 		err = GenerateAndParse("", "internal/db", "migrations.go", "templates/migrations.tmpl", nil)
 		if err != nil {
-			fmt.Println(fmt.Errorf("Routes file not created %v", err))
+			fmt.Println(fmt.Errorf("Migrations file not created %v", err))
 		}
 	}
 
@@ -183,7 +195,7 @@ func GenerateAndParse(domain, folder, outputName, tmpPath string, data *Generato
 		return fmt.Errorf("failed to write template %s: %w", targetFilePath, err)
 	}
 
-	fmt.Printf(" -> Created: %s\n", targetFilePath)
+	fmt.Printf(" -> Created: %s/%s\n", folder, outputName)
 
 	return nil
 }
