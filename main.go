@@ -117,7 +117,7 @@ func GenerateFolderStructure() error {
 	fmt.Println("Initializing folder structure...")
 
 	foldersToGenerate := map[string]string{
-		"cmd":        "cmd",
+		"api":        "cmd/api",
 		"scripts":    "scripts",
 		"config":     "internal/config",
 		"migration":  "internal/db/migrations",
@@ -142,11 +142,27 @@ func GenerateFolderStructure() error {
 		}
 	}
 
-	_, err := os.Stat("internal/config/config.go")
+	_, err := os.Stat("cmd/api/main.go")
+	if err != nil {
+		err = GenerateAndParse("", "cmd/api", "main.go", "templates/main.tmpl", nil)
+		if err != nil {
+			fmt.Println(fmt.Errorf("Main file not created %v", err))
+		}
+	}
+
+	_, err = os.Stat("internal/config/config.go")
 	if err != nil {
 		err = GenerateAndParse("", "internal/config", "config.go", "templates/config.tmpl", nil)
 		if err != nil {
 			fmt.Println(fmt.Errorf("Config file not created %v", err))
+		}
+	}
+
+	_, err = os.Stat("internal/redis/redis.go")
+	if err != nil {
+		err = GenerateAndParse("", "internal/config", "redis.go", "templates/redis.tmpl", nil)
+		if err != nil {
+			fmt.Println(fmt.Errorf("Redis file not created %v", err))
 		}
 	}
 
@@ -163,6 +179,14 @@ func GenerateFolderStructure() error {
 		err = GenerateAndParse("", "internal/server", "routes.go", "templates/routes.tmpl", nil)
 		if err != nil {
 			fmt.Println(fmt.Errorf("Routes file not created %v", err))
+		}
+	}
+
+	_, err = os.Stat("internal/middleware/middleware.go")
+	if err != nil {
+		err = GenerateAndParse("", "internal/middleware", "middleware.go", "templates/middleware.tmpl", nil)
+		if err != nil {
+			fmt.Println(fmt.Errorf("Middleware file not created %v", err))
 		}
 	}
 
