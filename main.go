@@ -20,13 +20,16 @@ type GeneratorData struct {
 }
 
 var DomainErr = errors.New("Domain Already Exists")
+var FileErr = errors.New("File Already Exists")
 
 func main() {
 	domainFlag := flag.String("d", "", "Domain name")
+	fileFlag := flag.String("f", "", "File to generate (handler|service|repository|types|models) (e.g. ddgen -d orders -f handler or ddgen -d orders -f handler,service)")
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage of ddgen:\n")
+		fmt.Fprintf(os.Stderr, "\nUsage of ddgen:\n")
 		fmt.Fprintf(os.Stderr, "  ddgen init\n")
-		fmt.Fprintf(os.Stderr, "  ddgen -d <domain_name>\n\n")
+		fmt.Fprintf(os.Stderr, "  ddgen -d <domain_name>\n")
+		fmt.Fprintf(os.Stderr, "  ddgen -f <file>\n\n")
 		fmt.Fprintf(os.Stderr, "Flags:\n")
 		flag.PrintDefaults()
 	}
@@ -46,14 +49,39 @@ func main() {
 		return
 	}
 
+	if *fileFlag == "" {
+		fmt.Println("Error: domain name flag (-d) is required")
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	if *fileFlag != "" && *domainFlag == "" {
+		fmt.Println("Error: domain name flag (-f) must have flag (-d)")
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	if *fileFlag != "" && *domainFlag != "" {
+		if err := GenerateFile(*domainFlag, *fileFlag); err != nil {
+			fmt.Println(fmt.Errorf("Error: %v\n", err))
+			if errors.Is(err, FileErr) {
+				os.Exit(1)
+			}
+
+			flag.Usage()
+			os.Exit(1)
+		}
+
+		return
+	}
+
 	if *domainFlag == "" {
 		fmt.Println("Error: domain name flag (-d) is required")
 		flag.Usage()
 		os.Exit(1)
 	}
 
-	err := GenerateDomain(*domainFlag)
-	if err != nil {
+	if err := GenerateDomain(*domainFlag); err != nil {
 		fmt.Println(fmt.Errorf("Error: %v\n", err))
 		if errors.Is(err, DomainErr) {
 			os.Exit(1)
@@ -107,6 +135,59 @@ func GenerateDomain(domainName string) error {
 		err = GenerateAndParse("", "internal/shared/models", fmt.Sprintf("%s.go", domain), "templates/models.tmpl", &data)
 		if err != nil {
 			fmt.Println(fmt.Errorf("Models file not created %v", err))
+		}
+	}
+
+	return nil
+}
+
+func GenerateFile(domain, files string) error {
+	fmt.Println("Initializing file...")
+
+	if strings.Contains(files, ".go") {
+		return fmt.Errorf("invalid file name: cannot contain file extension")
+	}
+
+	if strings.Contains(domain, "/") || strings.Contains(domain, "\\") {
+		return fmt.Errorf("invalid domain name: cannot contain path separators")
+	}
+
+	_, err := os.Stat(filepath.Join("internal", domain))
+	if err != nil {
+		if err := os.MkdirAll(filepath.Join("internal", domain), 0755); err != nil {
+			return fmt.Errorf("Cannot proceed creating domain folder %v", err)
+		}
+	}
+
+	commaSeparated := strings.SplitSeq(files, ",")
+
+	for file := range commaSeparated {
+		_, err := os.Stat(fmt.Sprintf("internal/%s/%s.go", domain, file))
+		if err != nil {
+			cap := strings.ToUpper(domain[0:1])
+			capitalizedDomain := fmt.Sprintf("%s%s", cap, domain[1:])
+			data := GeneratorData{Package: domain, Domain: capitalizedDomain}
+
+			switch file {
+			case "handler":
+				GenerateAndParse(domain, "internal", "handler.go", "templates/handler.tmpl", &data)
+			case "service":
+				GenerateAndParse(domain, "internal", "service.go", "templates/service.tmpl", &data)
+			case "repository":
+				GenerateAndParse(domain, "internal", "repository.go", "templates/repository.tmpl", &data)
+			case "types":
+				GenerateAndParse(domain, "internal", "types.go", "templates/types.tmpl", &data)
+			case "models":
+				_, err := os.Stat(fmt.Sprintf("internal/shared/models/%s.go", file))
+				if err != nil {
+					if err := os.MkdirAll("internal/shared/models", 0755); err != nil {
+						return fmt.Errorf("Cannot proceed creating domain folder %v", err)
+					}
+				}
+
+				GenerateAndParse("", "internal/shared/models", fmt.Sprintf("%s.go", domain), "templates/models.tmpl", &data)
+			}
+
 		}
 	}
 

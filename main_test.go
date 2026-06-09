@@ -61,3 +61,12 @@ func TestGenerateDomain(t *testing.T) {
 		}
 	})
 }
+
+func TestGenerateFile(t *testing.T) {
+	t.Run("Validation for file generation", func(t *testing.T) {
+		err := GenerateFile("name", "handler")
+		if err != nil {
+			t.Errorf("Expected no error, got %v", err)
+		}
+	})
+}
