@@ -49,12 +49,6 @@ func main() {
 		return
 	}
 
-	if *fileFlag == "" {
-		fmt.Println("Error: domain name flag (-d) is required")
-		flag.Usage()
-		os.Exit(1)
-	}
-
 	if *fileFlag != "" && *domainFlag == "" {
 		fmt.Println("Error: domain name flag (-f) must have flag (-d)")
 		flag.Usage()
