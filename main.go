@@ -95,6 +95,7 @@ func GenerateDomain(domainName string) error {
 
 	templates := map[string]string{
 		"templates/test.tmpl":       fmt.Sprintf("%s_test.go", domain),
+		"templates/mock.tmpl":       "mock.go",
 		"templates/handler.tmpl":    "handler.go",
 		"templates/service.tmpl":    "service.go",
 		"templates/repository.tmpl": "repository.go",
