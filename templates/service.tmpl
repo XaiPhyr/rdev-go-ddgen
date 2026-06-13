@@ -28,25 +28,45 @@ func New{{ .Domain }}Service(r {{ .Domain }}Repository) *service {
 
 func (s *service) Create(ctx context.Context) error {
     err := s.r.Create(ctx)
-    return err
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
 
 func (s *service) ReadOne(ctx context.Context) error {
     err := s.r.ReadOne(ctx)
-    return err
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
 
 func (s *service) ReadAll(ctx context.Context) error {
     err := s.r.ReadAll(ctx)
-    return err
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
 
 func (s *service) Update(ctx context.Context) error {
     err := s.r.Update(ctx)
-    return err
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
 
 func (s *service) Delete(ctx context.Context) error {
     err := s.r.Delete(ctx)
-    return err
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
