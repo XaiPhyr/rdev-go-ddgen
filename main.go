@@ -94,12 +94,14 @@ func GenerateDomain(domainName string) error {
 	domain := strings.ToLower(domainName)
 
 	templates := map[string]string{
-		"templates/test.tmpl":       fmt.Sprintf("%s_test.go", domain),
-		"templates/mock.tmpl":       "mock.go",
-		"templates/handler.tmpl":    "handler.go",
-		"templates/service.tmpl":    "service.go",
-		"templates/repository.tmpl": "repository.go",
-		"templates/types.tmpl":      "types.go",
+		"templates/test.tmpl":         fmt.Sprintf("%s_test.go", domain),
+		"templates/test_handler.tmpl": fmt.Sprintf("%s_handler_test.go", domain),
+		"templates/test_service.tmpl": fmt.Sprintf("%s_service_test.go", domain),
+		"templates/mock.tmpl":         "mock.go",
+		"templates/handler.tmpl":      "handler.go",
+		"templates/service.tmpl":      "service.go",
+		"templates/repository.tmpl":   "repository.go",
+		"templates/types.tmpl":        "types.go",
 	}
 
 	info, err := os.Stat(filepath.Join("internal", domain))
@@ -181,6 +183,11 @@ func GenerateFile(domain, files string) error {
 				}
 
 				GenerateAndParse("", "internal/shared/models", fmt.Sprintf("%s.go", domain), "templates/models.tmpl", &data)
+			case "tests":
+				GenerateAndParse(domain, "internal", "mock.go", "templates/mock.tmpl", &data)
+				GenerateAndParse(domain, "internal", fmt.Sprintf("%s_test.go", domain), "templates/test.tmpl", &data)
+				GenerateAndParse(domain, "internal", fmt.Sprintf("%s_handler_test.go", domain), "templates/test_handler.tmpl", &data)
+				GenerateAndParse(domain, "internal", fmt.Sprintf("%s_service_test.go", domain), "templates/test_service.tmpl", &data)
 			}
 
 		}
