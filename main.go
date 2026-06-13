@@ -93,6 +93,13 @@ func GenerateDomain(domainName string) error {
 
 	domain := strings.ToLower(domainName)
 
+	if strings.Contains(domain, "_") {
+		splitDomain := strings.Split(domain, "_")
+		if len(splitDomain) > 1 && splitDomain[1] == "" {
+			domain = strings.ReplaceAll(domain, "_", "")
+		}
+	}
+
 	templates := map[string]string{
 		"templates/test.tmpl":         fmt.Sprintf("%s_test.go", domain),
 		"templates/test_handler.tmpl": fmt.Sprintf("%s_handler_test.go", domain),
@@ -121,7 +128,30 @@ func GenerateDomain(domainName string) error {
 
 	cap := strings.ToUpper(domain[0:1])
 	capitalizedDomain := fmt.Sprintf("%s%s", cap, domain[1:])
-	data := GeneratorData{Package: domain, Domain: capitalizedDomain}
+
+	newDomain := capitalizedDomain
+	if strings.Contains(capitalizedDomain, "_") {
+		words := strings.Split(newDomain, "_")
+		for i := 1; i < len(words); i++ {
+			if len(words[i]) > 0 {
+				words[i] = strings.ToUpper(words[i][:1]) + words[i][1:]
+			}
+		}
+		newDomain = strings.Join(words, "")
+
+		splitDomain := strings.Split(capitalizedDomain, "_")
+		if len(splitDomain) > 1 && splitDomain[1] == "" {
+			newDomain = strings.ReplaceAll(capitalizedDomain, "_", "")
+		}
+	}
+
+	if strings.HasSuffix(newDomain, "ies") {
+		newDomain = newDomain[0:len(newDomain)-3] + "y"
+	} else if before, ok := strings.CutSuffix(newDomain, "s"); ok {
+		newDomain = before
+	}
+
+	data := GeneratorData{Package: domain, Domain: newDomain}
 
 	for tmpPath, outputName := range templates {
 		GenerateAndParse(domain, "internal", outputName, tmpPath, &data)
@@ -151,7 +181,7 @@ func GenerateFile(domain, files string) error {
 
 	_, err := os.Stat(filepath.Join("internal", domain))
 	if err != nil {
-		if err := os.MkdirAll(filepath.Join("internal", domain), 0755); err != nil {
+		if err := os.MkdirAll(filepath.Join("internal", strings.ToLower(domain)), 0755); err != nil {
 			return fmt.Errorf("Cannot proceed creating domain folder %v", err)
 		}
 	}
@@ -220,7 +250,7 @@ func GenerateFolderStructure() error {
 
 		fmt.Printf(" -> Created: %s\n", v)
 
-		if err := os.MkdirAll(v, 0755); err != nil {
+		if err := os.MkdirAll(strings.ToLower(v), 0755); err != nil {
 			return fmt.Errorf("Cannot proceed creating domain folder %v", err)
 		}
 	}
