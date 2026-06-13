@@ -101,7 +101,6 @@ func GenerateDomain(domainName string) error {
 	}
 
 	templates := map[string]string{
-		"templates/test.tmpl":         fmt.Sprintf("%s_test.go", domain),
 		"templates/test_handler.tmpl": fmt.Sprintf("%s_handler_test.go", domain),
 		"templates/test_service.tmpl": fmt.Sprintf("%s_service_test.go", domain),
 		"templates/mock.tmpl":         "mock.go",
@@ -215,7 +214,6 @@ func GenerateFile(domain, files string) error {
 				GenerateAndParse("", "internal/shared/models", fmt.Sprintf("%s.go", domain), "templates/models.tmpl", &data)
 			case "tests":
 				GenerateAndParse(domain, "internal", "mock.go", "templates/mock.tmpl", &data)
-				GenerateAndParse(domain, "internal", fmt.Sprintf("%s_test.go", domain), "templates/test.tmpl", &data)
 				GenerateAndParse(domain, "internal", fmt.Sprintf("%s_handler_test.go", domain), "templates/test_handler.tmpl", &data)
 				GenerateAndParse(domain, "internal", fmt.Sprintf("%s_service_test.go", domain), "templates/test_service.tmpl", &data)
 			}

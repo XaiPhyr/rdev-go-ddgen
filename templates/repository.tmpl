@@ -1,9 +1,31 @@
 package {{ .Package }}
 
+import "context"
+
 type repository struct {
     // db implement here!
 }
 
 func New{{ .Domain }}Repository() *repository {
     return &repository{}
+}
+
+func (r *repository) Create(ctx context.Context) error {
+    return nil
+}
+
+func (r *repository) ReadOne(ctx context.Context) error {
+    return nil
+}
+
+func (r *repository) ReadAll(ctx context.Context) error {
+    return nil
+}
+
+func (r *repository) Update(ctx context.Context) error {
+    return nil
+}
+
+func (r *repository) Delete(ctx context.Context) error {
+    return nil
 }

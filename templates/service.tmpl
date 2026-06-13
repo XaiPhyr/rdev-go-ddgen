@@ -25,3 +25,28 @@ type service struct {
 func New{{ .Domain }}Service(r {{ .Domain }}Repository) *service {
     return &service{r: r}
 }
+
+func (s *service) Create(ctx context.Context) error {
+    err := s.r.Create(ctx)
+    return err
+}
+
+func (s *service) ReadOne(ctx context.Context) error {
+    err := s.r.ReadOne(ctx)
+    return err
+}
+
+func (s *service) ReadAll(ctx context.Context) error {
+    err := s.r.ReadAll(ctx)
+    return err
+}
+
+func (s *service) Update(ctx context.Context) error {
+    err := s.r.Update(ctx)
+    return err
+}
+
+func (s *service) Delete(ctx context.Context) error {
+    err := s.r.Delete(ctx)
+    return err
+}
